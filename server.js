@@ -6,15 +6,7 @@ var img_proc = require('./image_process.js');
 
 app.use(express.json());
 var host_url = 'http://2a771f84.ngrok.io';
-
-var download = function(uri, filename, callback){
-  request.head(uri, function(err, res, body){
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
-};
+var bias = 0;
 
 app.get('/keyboard', function(req, res){
     var keySetting = {
@@ -25,20 +17,21 @@ app.get('/keyboard', function(req, res){
 
 app.post('/message', function(req, res){
     console.log('image downloading complete!')
-    var prom = img_proc.imageProcess(req.body.content);
-    prom.then(function(num_of_people){
-        var pick_num = Math.floor(Math.random() * (0, num_of_people) + 0);
+    bias = (bias + 1) % 100000000;
+    var img_id = bias.toString() + req.body.user_key;
+    var prom = img_proc.imageProcess(req.body.content, img_id);
+    prom.then(function(ret){
         var resSetting = {
             "message": {
                 "photo": {
-                    "url": host_url + "/output/" + pick_num.toString() + ".jpg",
-                    "width": 640,
-                    "height": 480
+                    "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
+                    "width":ret.width,
+                    "height": ret.height
                 }
             }
         };
-        console.log(pick_num);
-        console.log(num_of_people);
+        console.log('num of people:' + ret.num_of_people);
+        console.log('pick num:' + ret.pick_number);
         res.send(JSON.stringify(resSetting));
     })
 });

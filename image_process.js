@@ -7,7 +7,7 @@ const subscriptionKey = '7bd0f6be939f422bb7259e7173ae05f1';
 const uriBase = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect';
 const output_path = 'output/';
 
-exports.imageProcess = function(imageUrl) {
+exports.imageProcess = function(imageUrl, userID) {
     return new Promise(function(resolve, reject){
         const params = {
             'returnFaceId': 'true', 
@@ -33,7 +33,8 @@ exports.imageProcess = function(imageUrl) {
             }
     
             var jsonResponse = JSON.parse(body);
-    
+            var count = 0;
+
             for (var i = 0; i < jsonResponse.length; i++) {
                 var top = jsonResponse[i].faceRectangle.top - 30;
                 var left = jsonResponse[i].faceRectangle.left - 30;
@@ -44,11 +45,19 @@ exports.imageProcess = function(imageUrl) {
                     if (err) throw err;
                     lenna
                         .crop(left, top, width, height)
-                        .writeAsync(output_path + i.toString() + '.jpg'); // save
-                    if(i == jsonResponse.length - 1)
-                    {
-                        resolve(i + 1);
-                    }
+                        .writeAsync(output_path + userID + '_' + i.toString() + '.jpg').then(function(){
+                            count++;
+                            if(count == jsonResponse.length){
+                                var pick_number = Math.floor(Math.random() * (count - 0) + 0);
+                                var ret = {
+                                    "pick_number": pick_number,
+                                    "width": jsonResponse[pick_number].faceRectangle.width + 60,
+                                    "height": jsonResponse[pick_number].faceRectangle.height + 60,
+                                    "num_of_people": count
+                                };
+                                resolve(ret);
+                            }
+                        });
                 })(i, top, left, width, height));
             }
         });
