@@ -4,6 +4,7 @@ var fs = require('fs');
 var request = require('request');
 
 app.use(express.json());
+var host_url = 'http://2a771f84.ngrok.io';
 
 var download = function(uri, filename, callback){
   request.head(uri, function(err, res, body){
@@ -25,7 +26,23 @@ app.post('/message', function(req, res){
     console.log(req.body);
     download(req.body.content, 'output/test.jpg', function(){
         console.log('image downloading complete!')
+        var resSetting = {
+            "message": {
+                "photo": {
+                    "url": host_url + "/input/test.jpg",
+                    "width": 640,
+                    "height": 480
+                }
+            }
+        };
+        res.send(JSON.stringify(resSetting));
     });
+});
+
+app.get('*', function(req, res){
+    var url = req.url;
+    res.sendFile(__dirname + url);
+    console.log('return image!')
 });
 
 app.listen(8080, function(){
