@@ -35,6 +35,10 @@ exports.imageProcess = function(imageUrl, userID) {
             var jsonResponse = JSON.parse(body);
             var count = 0;
 
+            if(jsonResponse.length == 0) {
+                resolve(0);
+            }
+
             for (var i = 0; i < jsonResponse.length; i++) {
                 var top = jsonResponse[i].faceRectangle.top - 30;
                 var left = jsonResponse[i].faceRectangle.left - 30;
