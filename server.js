@@ -10,6 +10,9 @@ var img_proc2 = require('./image_process2');
 
 var app = express();
 app.use(express.json());
+app.set('views', './view_files');
+app.set('view engine', 'jade');
+
 var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
 var img_url = {};
 var bias = Math.round(+new Date()/1000) % 100000000;
@@ -40,29 +43,31 @@ function sendPhoto(response, relPath, width, height) {
 function sendImage(bias, req, res, select) {
     var img_id = bias.toString() + req.body.user_key;
     var prom = img_proc.imageProcess(img_url[req.body.user_key], img_id, select);
-    prom.then(function (ret) {
 
-        var resSetting;
-        if (ret == 0) { // 이미지에 얼굴이 하나도 없을 때
-            resSetting = {
-                "message": {
-                    "text": "이미지에 얼굴이 없습니다. 다시 시도하세요!"
-                }
-            };
-        } else { // 정상적인 경우
-            resSetting = {
-                "message": {
-                    "text": "오늘밤 주인공은 너야 너!!",
-                    "photo": {
-                        "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
-                        "width": ret.width,
-                        "height": ret.height
-                    },
-				"message_button": {
-						"label": "공유하기",
-						"url": "https://coupon/url"
-					}
+    prom.then(function(ret) {
 
+            var resSetting;
+            if (ret == 0) { // 이미지에 얼굴이 하나도 없을 때
+                resSetting = {
+                    "message": {
+                        "text": "이미지에 얼굴이 없습니다. 다시 시도하세요!"
+                    }
+                };
+            } else { // 정상적인 경우
+                resSetting = {
+                    "message": {
+                        "text": "오늘밤 주인공은 너야 너!!",
+                        "photo": {
+                            "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
+                            "width": ret.width,
+                            "height": ret.height
+
+                        },
+                        "message_button": {
+                            "label": "공유하기",
+                            "url": "https://localhost:8080/share/" + img_id + '/' + ret.pick_number.toString()
+                        }
+                    }
                 },
             };
             console.log('num of people:' + ret.num_of_people);
@@ -72,14 +77,18 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/keyboard', function (req, res) {
+app.get('/share/:img_id/:img_picked', function(req, res)) {
+	res.render('shareFB', {img_id : img_id, img_picked : img_pikced});
+}
+
+app.get('/keyboard', function(req, res) {
     var keySetting = {
         'type': 'text'
     }
     res.send(JSON.stringify(keySetting));
 });
 
-app.post('/message', function (req, res) {
+app.post('/message', function(req, res) {
     // request가 photo일 때
     if (req.body.type == "photo") {
         let user_key = req.body.user_key;
@@ -105,25 +114,34 @@ app.post('/message', function (req, res) {
                 let faceIds = faceList.map(face => face.faceId);
                 let user = USER_STORE[user_key];
 
-                return faceUtils.findSimilar(queryFaceId, faceIds).then(({ mostSimilarId }) => {
+                return faceUtils.findSimilar(queryFaceId, faceIds).then(({
+                    mostSimilarId
+                }) => {
 
-                    USER_STORE[user_key] = { state: 0 };
+                    USER_STORE[user_key] = {
+                        state: 0
+                    };
                     let pickedFace = faceList.find(face => {
                         return mostSimilarId === face.faceId;
                     });
 
                     img_proc2
                         .saveCropped(user.sourceUrl, imageSize, pickedFace.faceRectangle, user_key)
-                        .then(({ width, height, imgRelPath }) => {
+                        .then(({
+                            width,
+                            height,
+                            imgRelPath
+                        }) => {
                             sendPhoto(res, imgRelPath, width, height);
                         }, error => {
                             console.log(error);
                         });
-                    USER_STORE[user_key] = { state: 0 };
+                    USER_STORE[user_key] = {
+                        state: 0
+                    };
                 });
             });
-        }
-        else {
+        } else {
             var resSetting = {
                 "message": {
                     "text": "페이스룰렛! 테마를 선택하세요."
@@ -155,7 +173,9 @@ app.post('/message', function (req, res) {
             let user_key = req.body.user_key;
             if (!(user_key in USER_STORE)) {
                 // new user!!
-                USER_STORE[user_key] = { state: 0 };
+                USER_STORE[user_key] = {
+                    state: 0
+                };
             }
 
             let curState = USER_STORE[user_key].state;
@@ -176,8 +196,7 @@ app.post('/message', function (req, res) {
                 USER_STORE[user_key].state = 1;
                 sendMsg(res, '비교 할 1명의 사진을 보내주세요.');
             }
-        }
-        else if (req.body.content == "랜덤으로!") {
+        } else if (req.body.content == "랜덤으로!") {
             sendImage(bias, req, res, 'random');
         } else if (req.body.content == "가장 나이들어 보이는 사람") {
             sendImage(bias, req, res, 'age');
@@ -208,20 +227,19 @@ app.post('/message', function (req, res) {
     }
 });
 
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
     var url = req.url;
-    fs.exists(__dirname + url, function (exists) {
+    fs.exists(__dirname + url, function(exists) {
         if (exists) {
             res.sendFile(__dirname + url);
             console.log('return image:' + __dirname + url);
-        }
-		else{
-			console.log('invalid request!');
+        } else {
+            console.log('invalid request!');
         }
     });
 
 });
 
-app.listen(8080, function () {
+app.listen(8080, function() {
     console.log('server is running...');
 });
