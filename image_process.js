@@ -102,6 +102,8 @@ function pickProcess(jsonResponse, select) {
 			// console.log("max score : " + pick_number_score + ", " + score);
         }
 
+	// when select == emotion attributes.
+	// ex. "anger", "surprise", ...
 	} else {
 
 		pick_number = 0
@@ -123,7 +125,7 @@ function pickProcess(jsonResponse, select) {
 }
 
 // test code.
-var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
-var userId = 0;
-var select = 'neutral';
-imageProcess(imageUrl, userId, select);
+// var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
+// var userId = 0;
+// var select = 'neutral';
+// imageProcess(imageUrl, userId, select);
