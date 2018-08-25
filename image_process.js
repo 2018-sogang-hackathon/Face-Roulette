@@ -1,6 +1,7 @@
 'use strict';
 
 const request = require('request');
+const faceApi = require('./face-api');
 var Jimp = require('jimp');
 
 const subscriptionKey = '7bd0f6be939f422bb7259e7173ae05f1';
@@ -12,36 +13,13 @@ exports.imageProcess = imageProcess;
 function imageProcess(imageUrl, userID, select) {
 
     return new Promise(function(resolve, reject) {
-        const params = {
-            'returnFaceId': 'true',
-            'returnFaceLandmarks': 'false',
-            'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,' +
-                'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise'
-        };
+        faceApi.detectFaces(imageUrl).then(faceList => {
 
-        const options = {
-            uri: uriBase,
-            qs: params,
-            body: '{"url": ' + '"' + imageUrl + '"}',
-            headers: {
-                'Content-Type': 'application/json',
-                'Ocp-Apim-Subscription-Key': subscriptionKey
-            }
-        };
-
-        request.post(options, (error, response, body) => {
-
-            if (error) {
-                console.log('Error: ', error);
-                return;
-            }
-
-            var jsonResponse = JSON.parse(body);
             var count = 0;
-
-            if (jsonResponse.length == 0) {
+            if (faceList.length == 0) {
                 resolve(0);
             }
+
             Jimp.read(imageUrl).then(image => {
                 // Get width, height of original image.
                 var w = image.bitmap.width;
@@ -52,11 +30,11 @@ function imageProcess(imageUrl, userID, select) {
                 var origin_height = obj.height;
                 var cropped_size = [];
 				//console.log(origin_width, origin_height);
-                for (var i = 0; i < jsonResponse.length; i++) {
-                    var top = jsonResponse[i].faceRectangle.top;
-                    var left = jsonResponse[i].faceRectangle.left;
-                    var width = jsonResponse[i].faceRectangle.width;
-                    var height = jsonResponse[i].faceRectangle.height;
+                for (var i = 0; i < faceList.length; i++) {
+                    var top = faceList[i].faceRectangle.top;
+                    var left = faceList[i].faceRectangle.left;
+                    var width = faceList[i].faceRectangle.width;
+                    var height = faceList[i].faceRectangle.height;
 			
                     ({left, top, width, height} = cropTight(origin_width, origin_height, left, top, width, height));
 					cropped_size[i] = {};
@@ -69,8 +47,8 @@ function imageProcess(imageUrl, userID, select) {
                             .crop(left, top, width, height)
                             .writeAsync(output_path + userID + '_' + i.toString() + '.jpg').then(function(){
                                 count++;
-                                if(count == jsonResponse.length){
-                                    var pick_number = pickProcess(jsonResponse, select);
+                                if(count == faceList.length){
+                                    var pick_number = pickProcess(faceList, select);
                                     var ret = {
                                         "pick_number": pick_number,
                                         "width": cropped_size[pick_number].width,
@@ -83,9 +61,9 @@ function imageProcess(imageUrl, userID, select) {
                     })(i, top, left, width, height));
                 }
             })
-        })
+        });
     })
-};
+}
 
 function cropTight(origin_width, origin_height, left, top, width, height){
     var alpha = 0.5;
