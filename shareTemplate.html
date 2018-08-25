@@ -3,12 +3,6 @@
 
 <head>
 	<meta charset='utf-8'>
-	<!-- <meta property="og:url" , content="ddddddd"> -->
-	<!-- <meta property="og:url", 	content="https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/share/" + img_id + "/" + img_picked> -->
-	<!-- <meta property="og:type" , content="article"> -->
-	<!-- <meta property="og:title" , content="얼굴인식 제비뽑기"> -->
-	<!-- <meta id='m_description' property="og:description" , content="test test etst tst test"> -->
-	<meta property="og:image" , content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg">
 	<title></title>
 
 	<script>
@@ -32,16 +26,19 @@
 			}
 		};
 
-		var temp = getParameters(abc);
-		console.log(temp);
-		document.getElementId('m_description').setAttribute('content', temp);
+		/////////////////////////////////////
+		var img_id = getParameters(img_id);
+		var img_picked = getParameters(img_picked);
+		var original = getParameters(original);
+
+		// orignal : 카톡 서버에 있는 원본 사진 url
+		// https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/output/img_id + '_' + 'img_picked' : 크롭된(picked) 사진 url
 
 	</script>
 </head>
 
 <body>
 	hello!
-	<!-- <img src = '/output/' + img_id + '_' + img_picked + '.jpg'> -->
 </body>
 
 </html>
