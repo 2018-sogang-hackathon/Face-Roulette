@@ -16,7 +16,7 @@ app.use(express.static(__dirname));
 
 var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
 var img_url = {};
-var bias = Math.round(+new Date()/1000) % 100000000;
+var bias = Math.round(+new Date() / 1000) % 100000000;
 var USER_STORE = {};
 
 function sendMsg(response, msg) {
@@ -78,11 +78,11 @@ function sendImage(bias, req, res, select) {
 }
 
 app.get('/share/:img_id/:img_picked', function(req, res) {
-	console.log(req.params.img_id, req.params.img_picked);
-	var img_id = req.params.img_id;
-	var img_picked = req.params.img_picked;
-	// Facebook API Code
-	var tmp = `<!DOCTYPE html>
+    console.log(req.params.img_id, req.params.img_picked);
+    var img_id = req.params.img_id;
+    var img_picked = req.params.img_picked;
+    // Facebook API Code
+    var tmp = `<!DOCTYPE html>
 		<html>
 		<head>
    			<title> Facebook Login JavaScript Example </title>
@@ -99,7 +99,7 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
         	});
         	FB.ui({
         		method: 'share',
-				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
+				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?abc=111"
         		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
 				//href: "http://naver.com"
         	}, function(response) {
@@ -118,16 +118,16 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
 	</body>
 </html>`;
 
-	res.send(tmp);
-	//res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
+    res.send(tmp);
+    //res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
 });
 
 app.get('/view/:img_id/:img_picked', function(req, res) {
-	console.log("view inside");
-	var img_id = req.params.img_id;
-	var img_picked = req.params.img_picked;
-	// Template HTML Code
-	var ttemplate = `
+    console.log("view inside");
+    var img_id = req.params.img_id;
+    var img_picked = req.params.img_picked;
+    // Template HTML Code
+    var ttemplate = `
 	<!doctype html>
 <html>
 	<head>
@@ -144,8 +144,8 @@ app.get('/view/:img_id/:img_picked', function(req, res) {
 	</body>
 </html>
 		`;
-	res.send(ttemplate);
-	//res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
+    res.send(ttemplate);
+    //res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
 });
 
 app.get('/keyboard', function(req, res) {
@@ -165,7 +165,9 @@ app.post('/message', function(req, res) {
             let prm = faceApi.detectFaces(img_url[user_key])
                 .then(faceList => {
                     if (faceList.length !== 1) {
-                        USER_STORE[user_key] = { state: 0 };
+                        USER_STORE[user_key] = {
+                            state: 0
+                        };
                         return null;
                     }
                     return faceList[0].faceId;
@@ -218,7 +220,7 @@ app.post('/message', function(req, res) {
                     "buttons": [
                         "랜덤으로!",
                         "이 중 ~와 가장 닮은 사람은?",
-						"가장 나이들어 보이는 사람",
+                        "가장 나이들어 보이는 사람",
                         "가장 행복해보이는 사람",
                         "가장 슬퍼보이는 사람",
                         "가장 화나 보이는 사람",
@@ -251,7 +253,9 @@ app.post('/message', function(req, res) {
                     .then(faceList => {
                         if (faceList.length < 1) {
                             console.log('error: 아무도 없는 사진');
-                            USER_STORE[user_key] = { state: 0 };
+                            USER_STORE[user_key] = {
+                                state: 0
+                            };
                             return null;
                         }
                         return faceList;
