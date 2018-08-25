@@ -98,7 +98,11 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
         	});
         	FB.ui({
         		method: 'share',
-				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?abc=111"
+				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
+		        title: 'is real',  // The same than name in feed method
+		        //picture: 'path_to_your_picture',
+		        //caption: 'your_caption',
+		        description: '이거 되냐',
         		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
 				//href: "http://naver.com"
         	}, function(response) {
