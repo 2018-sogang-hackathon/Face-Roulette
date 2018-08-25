@@ -5,7 +5,7 @@ var img_proc = require('./image_process.js');
 
 var app = express();
 app.use(express.json());
-var host_url = 'http://2a771f84.ngrok.io';
+var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
 var img_url = {};
 var bias = 0;
 
@@ -23,7 +23,7 @@ function sendImage(bias, req, res, select) {
             };
         } else { // 정상적인 경우
             resSetting = {
-				"text": "당첨자는 바로..!",
+//				"text": "당첨자는 바로..!",
                 "message": {
                     "text": "오늘밤 주인공은 너야 너!!",
                     "photo": {
@@ -32,10 +32,10 @@ function sendImage(bias, req, res, select) {
                         "height": ret.height
                     }
                 },
-				"message_button": {
-			      "label": "공유하기",
-			      "url": "https://coupon/url"
-			    }
+//				"message_button": {
+//			      "label": "공유하기",
+//			      "url": "https://coupon/url"
+//			    }
             };
             console.log('num of people:' + ret.num_of_people);
             console.log('pick num:' + ret.pick_number);
