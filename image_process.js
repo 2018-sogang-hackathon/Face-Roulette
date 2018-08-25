@@ -67,7 +67,7 @@ function imageProcess(imageUrl, userID, select) {
                         if (err) throw err;
                         lenna
                             .crop(left, top, width, height)
-                            .writeAsync(output_path + userID + '_' + i.toString() + '.jpg').then(function(){
+                            .writeAsync(output_path + userID + '.jpg').then(function(){
                                 count++;
                                 if(count == jsonResponse.length){
                                     var pick_number = pickProcess(jsonResponse, select);

@@ -121,7 +121,7 @@ app.post('/message', function(req, res) {
                     });
 
                     img_proc2
-                        .saveCropped(user.sourceUrl, imageSize, pickedFace.faceRectangle, user_key)
+                        .saveCropped(user.sourceUrl, imageSize, pickedFace.faceRectangle, bias.toString() + user_key)
                         .then(({
                             width,
                             height,
