@@ -42,7 +42,7 @@ function imageProcess(imageUrl, userID, select) {
             if (jsonResponse.length == 0) {
                 resolve(0);
             }
-            Jimp.read(imageUrl).then(image =>{
+            Jimp.read(imageUrl).then(image => {
                 // Get width, height of original image.
                 var w = image.bitmap.width;
                 var h = image.bitmap.height;
