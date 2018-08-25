@@ -50,7 +50,6 @@ function imageProcess(imageUrl, userID, select) {
             }).then(obj => {
                 var origin_width = obj.width;
                 var origin_height = obj.height;
-                var alpha = 0.5;
                 //console.log(origin_width, origin_height);
                 for (var i = 0; i < jsonResponse.length; i++) {
                     var top = jsonResponse[i].faceRectangle.top;
@@ -58,14 +57,8 @@ function imageProcess(imageUrl, userID, select) {
                     var width = jsonResponse[i].faceRectangle.width;
                     var height = jsonResponse[i].faceRectangle.height;
 
-                    var gap = left - Math.max(left - width*alpha, 0);
-                    var gap2 = Math.min(left + width*(1+alpha), origin_width) - (left + width);
-                    left -= Math.min(gap, gap2);
-                    width += Math.min(gap, gap2) * 2;
-                    var gap = top - Math.max(top - height*alpha, 0);
-                    var gap2 = Math.min(top + height*(1+alpha), origin_height) - (top + height);
-                    top -= Math.min(gap, gap2);
-                    height += Math.min(gap, gap2) * 2;
+                    ({left, top, width, height} = cropTight(origin_width, origin_height, left, top, width, height));
+
                     Jimp.read(imageUrl, ((i, top, left, width, height) => (err, lenna) => {
                         if (err) throw err;
                         lenna
@@ -90,6 +83,19 @@ function imageProcess(imageUrl, userID, select) {
     })
 };
 
+function cropTight(origin_width, origin_height, left, top, width, height){
+    var alpha = 0.5;
+    var gap = left - Math.max(left - width*alpha, 0);
+    var gap2 = Math.min(left + width*(1+alpha), origin_width) - (left + width);
+    left -= Math.min(gap, gap2);
+    width += Math.min(gap, gap2) * 2;
+    var gap = top - Math.max(top - height*alpha, 0);
+    var gap2 = Math.min(top + height*(1+alpha), origin_height) - (top + height);
+    top -= Math.min(gap, gap2);
+    height += Math.min(gap, gap2) * 2;
+
+    return {left, top, width, height};
+}
 function pickProcess(jsonResponse, select) {
     var pick_number;
     var pick_number_score;
@@ -138,6 +144,7 @@ function pickProcess(jsonResponse, select) {
 // test code.
 // var imageUrl = 'http://dn-m.talk.kakao.com/talkm/bl2TiOCu5js/xh4Oqs5ClcWqjHfLMfJdl1/i_soqvnbua000h1.jpg';
 // var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
+// var imageUrl = 'http://dn-m.talk.kakao.com/talkm/bl2TiOCu5js/xh4Oqs5ClcWqjHfLMfJdl1/i_soqvnbua000h1.jpg';
 // var userId = 0;
 // var select = 'neutral';
 // imageProcess(imageUrl, userId, select);
