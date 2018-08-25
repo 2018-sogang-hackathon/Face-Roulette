@@ -96,18 +96,35 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
         		xfbml: true,
         		version: 'v3.1'
         	});
-        	FB.ui({
-        		method: 'share',
-				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
-		        title: 'is real',  // The same than name in feed method
-		        //picture: 'path_to_your_picture',
-		        //caption: 'your_caption',
-		        description: '이거 되냐',
-        		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
-				//href: "http://naver.com"
-        	}, function(response) {
-        		console.log('success');
-       		});
+			FB.ui({
+		        method: 'share_open_graph',
+		        action_type: 'og.shares',
+		        action_properties: JSON.stringify({
+		            object: {
+		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html',
+		                'og:title': 'title test test',
+		                'og:description': 'desc test test',
+		                'og:image': 'https://img.huffingtonpost.com/asset/5ab1b7562000007d06eb27f0.jpeg?ops=scalefit_630_noupscale'
+		            }
+		        })
+		    },
+		    function (response) {
+		        // Action after response
+		    });
+
+        	// FB.ui({
+        	// 	method: 'share',
+			// 	mobile_iframe: true,
+			// 	href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
+		    //     title: 'is real',  // The same than name in feed method
+		    //     //picture: 'path_to_your_picture',
+		    //     //caption: 'your_caption',
+		    //     description: '이거 되냐',
+        	// 	//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
+			// 	//href: "http://naver.com"
+        	// }, function(response) {
+        	// 	console.log('success');
+       		// });
         };
         (function(d, s, id) {
         	var js, fjs = d.getElementsByTagName(s)[0];
