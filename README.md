@@ -1,6 +1,6 @@
 Face-Roulette
 =====================
-![alt text](logos/logo.jpg)
+![alt text](logos/logo.jpg=100x100)
 ![alt text](logos/logo2.jpg)
 
 ## 1. 서버 실행방법
