@@ -84,7 +84,8 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
 });
 
 app.get('/view/:img_id/:img_picked', function(req, res) {
-	res.render('shareTemplate', {img_id : img_id, img_picked : img_picked});
+	console.log("view inside");
+	res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
 });
 
 app.get('/keyboard', function(req, res) {
