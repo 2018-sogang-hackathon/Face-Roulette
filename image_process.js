@@ -7,17 +7,18 @@ const subscriptionKey = '7bd0f6be939f422bb7259e7173ae05f1';
 const uriBase = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect';
 const output_path = 'output/';
 
-exports.imageProcess = imgProcess;
+exports.imageProcess = imageProcess;
 
-function imgProcess(imageUrl, userID) {
-    return new Promise(function(resolve, reject){
+function imageProcess(imageUrl, userID, select) {
+
+    return new Promise(function(resolve, reject) {
         const params = {
-            'returnFaceId': 'true', 
+            'returnFaceId': 'true',
             'returnFaceLandmarks': 'false',
             'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,' +
                 'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise'
         };
-    
+
         const options = {
             uri: uriBase,
             qs: params,
@@ -27,18 +28,20 @@ function imgProcess(imageUrl, userID) {
                 'Ocp-Apim-Subscription-Key': subscriptionKey
             }
         };
+
+		// console.log("bbbbb");
+
         request.post(options, (error, response, body) => {
-    
+
             if (error) {
                 console.log('Error: ', error);
                 return;
             }
-    
+
             var jsonResponse = JSON.parse(body);
             var count = 0;
 
-            if(jsonResponse.length == 0) {
-                console.log('length is zero');
+            if (jsonResponse.length == 0) {
                 resolve(0);
             }
             Jimp.read(imageUrl).then(image =>{
@@ -58,14 +61,13 @@ function imgProcess(imageUrl, userID) {
                     var height = jsonResponse[i].faceRectangle.height;
 
                     var gap = left - Math.max(left - width*alpha, 0);
-                    var gap2 = Math.min(width*(1+2*alpha), origin_width) - (left + width);
+                    var gap2 = Math.min(left + width*(1+alpha), origin_width) - (left + width);
                     left -= Math.min(gap, gap2);
                     width += Math.min(gap, gap2) * 2;
                     var gap = top - Math.max(top - height*alpha, 0);
-                    var gap2 = Math.min(height*(1+2*alpha), origin_height) - (top + height);
+                    var gap2 = Math.min(top + height*(1+alpha), origin_height) - (top + height);
                     top -= Math.min(gap, gap2);
                     height += Math.min(gap, gap2) * 2;
-
                     Jimp.read(imageUrl, ((i, top, left, width, height) => (err, lenna) => {
                         if (err) throw err;
                         lenna
@@ -73,7 +75,7 @@ function imgProcess(imageUrl, userID) {
                             .writeAsync(output_path + userID + '_' + i.toString() + '.jpg').then(function(){
                                 count++;
                                 if(count == jsonResponse.length){
-                                    var pick_number = Math.floor(Math.random() * (count - 0) + 0);
+                                    var pick_number = pickProcess(jsonResponse, select);
                                     var ret = {
                                         "pick_number": pick_number,
                                         "width": jsonResponse[pick_number].faceRectangle.width + 60,
@@ -86,12 +88,57 @@ function imgProcess(imageUrl, userID) {
                     })(i, top, left, width, height));
                 }
             })
-
-        });
-    });
+        })
+    })
 };
-// // Test Code
-// var testURL = 'http://dn-m.talk.kakao.com/talkm/bl2TiOCu5js/xh4Oqs5ClcWqjHfLMfJdl1/i_soqvnbua000h1.jpg'; //현석얼굴
-// //var testURL = 'https://img.huffingtonpost.com/asset/5ab1b7562000007d06eb27f0.jpeg?ops=scalefit_630_noupscale'; // 레드벨벳5인
-// var testID = '05width+height3';
-// imgProcess(testURL, testID);
+
+function pickProcess(jsonResponse, select) {
+    var pick_number;
+    var pick_number_score;
+
+	if (select == 'random') {
+
+        pick_number = Math.floor(Math.random() * (jsonResponse.length - 0) + 0);
+
+    } else if (select == 'age') {
+
+		pick_number = 0
+        pick_number_score = jsonResponse[0].faceAttributes.age;
+
+        for (var i = 0; i < jsonResponse.length; i++) {
+            var score = jsonResponse[i].faceAttributes.age;
+            if (pick_number_score < score) {
+                pick_number = i;
+                pick_number_score = jsonResponse[i].faceAttributes.age;
+            }
+
+			// console.log("max score : " + pick_number_score + ", " + score);
+        }
+
+	// when select == emotion attributes.
+	// ex. "anger", "surprise", ...
+	} else {
+
+		pick_number = 0
+        pick_number_score = jsonResponse[0].faceAttributes.emotion[select];
+
+        for (var i = 0; i < jsonResponse.length; i++) {
+            var score = jsonResponse[i].faceAttributes.emotion[select];
+            if (pick_number_score > score) {
+                pick_number = i;
+                pick_number_score = jsonResponse[i].faceAttributes.emotion[select];
+            }
+
+			// console.log("max score : " + pick_number_score + ", " + score);
+        }
+	}
+
+	// console.log(pick_number);
+    return pick_number;
+}
+
+// test code.
+// var imageUrl = 'http://dn-m.talk.kakao.com/talkm/bl2TiOCu5js/xh4Oqs5ClcWqjHfLMfJdl1/i_soqvnbua000h1.jpg';
+// var userId = 0;
+// var select = 'neutral';
+// imageProcess(imageUrl, userId, select);
