@@ -12,6 +12,7 @@ var app = express();
 app.use(express.json());
 app.set('views', './view_files');
 app.set('view engine', 'jade');
+app.use(express.static(__dirname));
 
 var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
 var img_url = {};
@@ -98,8 +99,9 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
         	});
         	FB.ui({
         		method: 'share',
-        		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked;
-				href: "http://naver.com"
+				href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
+        		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
+				//href: "http://naver.com"
         	}, function(response) {
         		console.log('success');
        		});
@@ -115,7 +117,7 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
 		</script>
 	</body>
 </html>`;
-	
+
 	res.send(tmp);
 	//res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
 });
@@ -140,7 +142,7 @@ app.get('/view/:img_id/:img_picked', function(req, res) {
 	<body>
 		<img src = 'https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/output/' + ${img_id} + '_' + ${img_picked} + '.jpg'>
 	</body>
-</html>	
+</html>
 		`;
 	res.send(ttemplate);
 	//res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
