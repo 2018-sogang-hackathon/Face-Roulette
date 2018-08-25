@@ -83,28 +83,47 @@ function pickProcess(jsonResponse, select) {
     var pick_number;
     var pick_number_score;
 
-    if (select == 'emotion_surprise') {
+	if (select == 'random') {
 
-        pick_number = 0
-        pick_number_score = jsonResponse[0].faceAttributes.emotion.surprise
+        pick_number = Math.floor(Math.random() * (jsonResponse.length - 0) + 0);
+
+    } else if (select == 'age') {
+
+		pick_number = 0
+        pick_number_score = jsonResponse[0].faceAttributes.age;
 
         for (var i = 0; i < jsonResponse.length; i++) {
-            var score = jsonResponse[i].faceAttributes.emotion.surprise
+            var score = jsonResponse[i].faceAttributes.age;
             if (pick_number_score < score) {
                 pick_number = i;
-                pick_number_score = jsonResponse[i].faceAttributes.emotion.surprise;
+                pick_number_score = jsonResponse[i].faceAttributes.age;
             }
+
+			// console.log("max score : " + pick_number_score + ", " + score);
         }
 
-    } else if (select == 'random') {
-        pick_number = Math.floor(Math.random() * (jsonResponse.length - 0) + 0);
-    }
+	} else {
 
+		pick_number = 0
+        pick_number_score = jsonResponse[0].faceAttributes.emotion[select];
+
+        for (var i = 0; i < jsonResponse.length; i++) {
+            var score = jsonResponse[i].faceAttributes.emotion[select];
+            if (pick_number_score > score) {
+                pick_number = i;
+                pick_number_score = jsonResponse[i].faceAttributes.emotion[select];
+            }
+
+			// console.log("max score : " + pick_number_score + ", " + score);
+        }
+	}
+
+	// console.log(pick_number);
     return pick_number;
 }
 
 // test code.
-// var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
-// var userId = 0;
-// var select = 'emotion_surprise';
-// imageProcess(imageUrl, userId, select);
+var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
+var userId = 0;
+var select = 'neutral';
+imageProcess(imageUrl, userId, select);
