@@ -76,10 +76,11 @@ function sendImage(bias, req, res, select) {
 }
 
 app.get('/share/:img_id/:img_picked', function(req, res) {
+	console.log("hhhhh");
 	res.render('share', {img_id : img_id, img_picked : img_picked});
 });
 
-app.get('/view/:img_id/:img_picked', function(req, res)) {
+app.get('/view/:img_id/:img_picked', function(req, res) {
 	res.render('shareTemplate', {img_id : img_id, img_picked : img_picked});
 });
 
