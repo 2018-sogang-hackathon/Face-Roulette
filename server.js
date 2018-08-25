@@ -75,9 +75,9 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/share/:img_id/:img_picked', function(req, res)) {
+app.get('/share/:img_id/:img_picked', function(req, res) {
 	res.render('shareTemplate', {img_id : img_id, img_picked : img_pikced});
-}
+});
 
 app.get('/keyboard', function(req, res) {
     var keySetting = {
