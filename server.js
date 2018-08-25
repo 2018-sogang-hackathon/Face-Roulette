@@ -112,8 +112,22 @@ app.post('/message', function(req, res) {
 
 app.get('*', function(req, res) {
     var url = req.url;
-    res.sendFile(__dirname + url);
-    console.log('return image!')
+    fs.exists(__dirname + url, function(exists){
+        if(exists){
+            res.sendFile(__dirname + url);
+            console.log('return image!');
+        }
+        else{
+            var resSetting = {
+                "message": {
+                    "text": "이미지를 보내주세요!"
+                }
+            };
+            res.send(JSON.stringify(resSetting));
+            console.log('invalid request!');
+        }
+    });
+    
 });
 
 app.listen(8080, function() {
