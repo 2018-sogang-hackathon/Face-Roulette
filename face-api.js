@@ -1,4 +1,5 @@
 const request = require('request');
+const dbUtils = require('./db-utils');
 
 const SUBSCRIPTION_KEY = '7bd0f6be939f422bb7259e7173ae05f1';
 const URL_BASE = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0';
@@ -39,6 +40,8 @@ function detectFaces(imageUrl) {
         console.log('Error: ', error);
         reject(error);
       }
+      dbUtils.addFaceData(body);
+
       resolve(body);
     });
   });
