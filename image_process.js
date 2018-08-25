@@ -112,7 +112,7 @@ function pickProcess(jsonResponse, select) {
                 pick_number_score = jsonResponse[i].faceAttributes.age;
             }
 
-			// console.log("max score : " + pick_number_score + ", " + score);
+			console.log(i + ", score : " + score + ", max score" + pick_number_score);
         }
 
 	// when select == emotion attributes.
@@ -124,16 +124,16 @@ function pickProcess(jsonResponse, select) {
 
         for (var i = 0; i < jsonResponse.length; i++) {
             var score = jsonResponse[i].faceAttributes.emotion[select];
-            if (pick_number_score > score) {
+            if (pick_number_score < score) {
                 pick_number = i;
                 pick_number_score = jsonResponse[i].faceAttributes.emotion[select];
             }
 
-			// console.log("max score : " + pick_number_score + ", " + score);
+			console.log(i + ", score : " + score + ", max score" + pick_number_score);
         }
 	}
 
-	// console.log(pick_number);
+	console.log("pick_number : " + pick_number);
     return pick_number;
 }
 
