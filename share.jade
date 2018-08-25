@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Facebook Login JavaScript Example</title>
-    <meta charset="UTF-8">
-</head>
-
-<body>
-    <script>
-
+// parameters : img_id, img_picked
+dOCTYPE
+html
+head
+    title Facebook Login JavaScript Example
+    meta(charset="utf-8")
+body
+    script
         window.fbAsyncInit = function() {
             FB.init({
                 appId: '2136979469960699',
@@ -21,7 +18,7 @@
 
             FB.ui({
                 method: 'share',
-                href: 'https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/share',
+                href: 'https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/view/' + img_id + '/' + img_picked'
             }, function(response) {
                 console.log("success");
             });
@@ -36,10 +33,3 @@
             js.src = "https://connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-
-    </script>
-
-    <div id="status"></div>
-</body>
-
-</html>
