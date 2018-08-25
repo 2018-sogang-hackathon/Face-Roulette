@@ -58,14 +58,7 @@ function imageProcess(imageUrl, userID, select) {
                     var width = jsonResponse[i].faceRectangle.width;
                     var height = jsonResponse[i].faceRectangle.height;
 
-                    var gap = left - Math.max(left - width*alpha, 0);
-                    var gap2 = Math.min(left + width*(1+alpha), origin_width) - (left + width);
-                    left -= Math.min(gap, gap2);
-                    width += Math.min(gap, gap2) * 2;
-                    var gap = top - Math.max(top - height*alpha, 0);
-                    var gap2 = Math.min(top + height*(1+alpha), origin_height) - (top + height);
-                    top -= Math.min(gap, gap2);
-                    height += Math.min(gap, gap2) * 2;
+                    cropTight(origin_width, origin_height, left, top, width, height);
                     Jimp.read(imageUrl, ((i, top, left, width, height) => (err, lenna) => {
                         if (err) throw err;
                         lenna
@@ -89,7 +82,16 @@ function imageProcess(imageUrl, userID, select) {
         })
     })
 };
-
+function cropTight(ori_width, ori_height, left, top, width, height){
+    var gap = left - Math.max(left - width*alpha, 0);
+    var gap2 = Math.min(left + width*(1+alpha), origin_width) - (left + width);
+    left -= Math.min(gap, gap2);
+    width += Math.min(gap, gap2) * 2;
+    var gap = top - Math.max(top - height*alpha, 0);
+    var gap2 = Math.min(top + height*(1+alpha), origin_height) - (top + height);
+    top -= Math.min(gap, gap2);
+    height += Math.min(gap, gap2) * 2;
+}
 function pickProcess(jsonResponse, select) {
     var pick_number;
     var pick_number_score;
