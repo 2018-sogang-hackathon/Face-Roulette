@@ -7,7 +7,7 @@ const subscriptionKey = '7bd0f6be939f422bb7259e7173ae05f1';
 const uriBase = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect';
 const output_path = 'output/';
 
-exports.imageProcess = function(imageUrl, userID) {
+exports.imageProcess = function imgProcess(imageUrl, userID) {
     return new Promise(function(resolve, reject){
         const params = {
             'returnFaceId': 'true', 
@@ -67,3 +67,7 @@ exports.imageProcess = function(imageUrl, userID) {
         });
     });
 };
+// Test Code
+var testURL = 'https://img.huffingtonpost.com/asset/5ab1b7562000007d06eb27f0.jpeg?ops=scalefit_630_noupscale';
+var testID = 'qwer';
+imgProcess(testURL, testID);
