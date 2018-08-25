@@ -15,8 +15,7 @@ app.set('view engine', 'jade');
 
 var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
 var img_url = {};
-var bias = 0;
-
+var bias = Math.round(+new Date()/1000) % 100000000;
 var USER_STORE = {};
 
 function sendMsg(response, msg) {
@@ -38,7 +37,6 @@ function sendPhoto(response, relPath, width, height) {
             }
         }
     };
-
     response.send(JSON.stringify(resSetting));
 }
 
@@ -47,7 +45,6 @@ function sendImage(bias, req, res, select) {
     var prom = img_proc.imageProcess(img_url[req.body.user_key], img_id, select);
 
     prom.then(function(ret) {
-
             var resSetting;
             if (ret == 0) { // 이미지에 얼굴이 하나도 없을 때
                 resSetting = {
@@ -70,11 +67,10 @@ function sendImage(bias, req, res, select) {
                             "url": "https://localhost:8080/share.html?img_id=" + img_id + '&img_picked=' + ret.pick_number.toString()
                         }
                     }
-                },
-            };
-            console.log('num of people:' + ret.num_of_people);
-            console.log('pick num:' + ret.pick_number);
-        }
+                };
+			}
+        console.log('num of people:' + ret.num_of_people);
+        console.log('pick num:' + ret.pick_number);
         res.send(JSON.stringify(resSetting));
     });
 }
@@ -100,10 +96,7 @@ app.post('/message', function(req, res) {
             let prm = faceApi.detectFaces(img_url[user_key])
                 .then(faceList => {
                     if (faceList.length !== 1) {
-                        console.log('에러 1명이 아닌 사진');
-                        USER_STORE[user_key] = {
-                            state: 0
-                        };
+                        USER_STORE[user_key] = { state: 0 };
                         return null;
                     }
                     return faceList[0].faceId;
@@ -112,7 +105,7 @@ app.post('/message', function(req, res) {
             let user = USER_STORE[user_key];
             Promise.all([prm, user.faceListPrm, user.imageSizePrm]).then(([queryFaceId, faceList, imageSize]) => {
                 if (!queryFaceId || !faceList) {
-                    sendMsg(res, '뭔가 잘못됐음!!');
+                    sendMsg(res, '사진에 한 명만 있어야 합니다.');
                     return;
                 }
 
@@ -131,7 +124,7 @@ app.post('/message', function(req, res) {
                     });
 
                     img_proc2
-                        .saveCropped(user.sourceUrl, imageSize, pickedFace.faceRectangle, user_key)
+                        .saveCropped(user.sourceUrl, imageSize, pickedFace.faceRectangle, bias.toString() + user_key)
                         .then(({
                             width,
                             height,
@@ -154,9 +147,9 @@ app.post('/message', function(req, res) {
                 "keyboard": {
                     "type": "buttons",
                     "buttons": [
-                        "유사도피커 TEST",
                         "랜덤으로!",
-                        "가장 나이들어 보이는 사람",
+                        "이 중 ~와 가장 닮은 사람은?",
+						"가장 나이들어 보이는 사람",
                         "가장 행복해보이는 사람",
                         "가장 슬퍼보이는 사람",
                         "가장 화나 보이는 사람",
@@ -173,7 +166,7 @@ app.post('/message', function(req, res) {
 
     } else { // request가 button이거나 text일 때
         bias = (bias + 1) % 100000000;
-        if (req.body.content == "유사도피커 TEST") {
+        if (req.body.content == "이 중 ~와 가장 닮은 사람은?") {
             // sendImage(bias, req, res, 'random');
             let user_key = req.body.user_key;
             if (!(user_key in USER_STORE)) {
@@ -188,10 +181,8 @@ app.post('/message', function(req, res) {
                 let prm = faceApi.detectFaces(img_url[user_key])
                     .then(faceList => {
                         if (faceList.length < 1) {
-                            console.log('에러 아무도 없는 사진');
-                            USER_STORE[user_key] = {
-                                state: 0
-                            };
+                            console.log('error: 아무도 없는 사진');
+                            USER_STORE[user_key] = { state: 0 };
                             return null;
                         }
                         return faceList;
@@ -201,7 +192,7 @@ app.post('/message', function(req, res) {
                 USER_STORE[user_key].imageSizePrm = img_proc2.getImageSize(img_url[user_key]);
                 USER_STORE[user_key].sourceUrl = img_url[user_key];
                 USER_STORE[user_key].state = 1;
-                sendMsg(res, '비교할 1명의 사진을 첨부해주세요');
+                sendMsg(res, '비교 할 1명의 사진을 보내주세요.');
             }
         } else if (req.body.content == "랜덤으로!") {
             sendImage(bias, req, res, 'random');

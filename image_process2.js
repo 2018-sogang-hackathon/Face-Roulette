@@ -3,7 +3,6 @@ const Jimp = require('jimp');
 module.exports = { getImageSize, saveCropped };
 
 const OUTPUT_PATH = 'output/';
-let UNIQUE_ID = 0;
 
 /**
  * 
@@ -32,7 +31,7 @@ function saveCropped(imageUrl, imageSize, rectangle, userId) {
   const tmp = cropTight(imageSize.width, imageSize.height, rectangle.left, rectangle.top, rectangle.width, rectangle. height);
   const { left, top, width, height } = tmp;
 
-  const imgRelPath = OUTPUT_PATH + userId + '_' + `cropped${UNIQUE_ID++}` + '.jpg';
+  const imgRelPath = OUTPUT_PATH + userId + '.jpg';
 
   return new Promise((resolve, reject) => {
     Jimp.read(imageUrl, (err, lenna) => {
