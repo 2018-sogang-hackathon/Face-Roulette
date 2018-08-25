@@ -64,7 +64,7 @@ function sendImage(bias, req, res, select) {
                         },
                         "message_button": {
                             "label": "공유하기",
-                            "url": "https://localhost:8080/share.html?img_id=" + img_id + '&img_picked=' + ret.pick_number.toString()
+                            "url": "https://localhost:8080/share/" + img_id + '/' + ret.pick_number.toString()
                         }
                     }
                 };
@@ -75,9 +75,13 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/share/:img_id/:img_picked', function(req, res)) {
-	res.render('shareTemplate', {img_id : img_id, img_picked : img_pikced});
-}
+app.get('/share/:img_id/:img_picked', function(req, res) {
+	res.render('share', {img_id : img_id, img_picked : img_picked});
+});
+
+app.get('/view/:img_id/:img_picked', function(req, res)) {
+	res.render('shareTemplate', {img_id : img_id, img_picked : img_picked});
+});
 
 app.get('/keyboard', function(req, res) {
     var keySetting = {
