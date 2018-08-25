@@ -23,20 +23,21 @@ function sendImage(bias, req, res, select) {
             };
         } else { // 정상적인 경우
             resSetting = {
-//				"text": "당첨자는 바로..!",
+				"text": "당첨자는 바로..!",
                 "message": {
                     "text": "오늘밤 주인공은 너야 너!!",
                     "photo": {
                         "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
                         "width": ret.width,
                         "height": ret.height
-                    }
+                    },
+			"message_button": {
+							  "label": "공유하기",
+							  "url": "https://coupon/url"
+							}
+
                 },
-//				"message_button": {
-//			      "label": "공유하기",
-//			      "url": "https://coupon/url"
-//			    }
-            };
+			 };
             console.log('num of people:' + ret.num_of_people);
             console.log('pick num:' + ret.pick_number);
         }
