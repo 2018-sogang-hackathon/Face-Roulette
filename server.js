@@ -65,7 +65,7 @@ function sendImage(bias, req, res, select) {
                     },
 					"message_button": {
 	                    "label": "공유하기",
-	                    "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
+	                    "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString() + '/' + req.body.user_key
 	                }
                 },
             };
@@ -76,10 +76,11 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/share/:img_id/:img_picked', function(req, res) {
-    console.log(req.params.img_id, req.params.img_picked);
+app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
+    console.log(req.params.img_id, req.params.img_picked, req.params.user_key);
     var img_id = req.params.img_id;
     var img_picked = req.params.img_picked;
+	var img_original = img_url[req.params.user_key];
     // Facebook API Code
     var tmp = `<!DOCTYPE html>
 		<html>
@@ -101,10 +102,11 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
 		        action_type: 'og.shares',
 		        action_properties: JSON.stringify({
 		            object: {
-		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked},
+		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_original}',
 		                'og:title': '사진 속 누가 제일 행복해보일까?',
 		                'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
-		                'og:image': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output/${img_id}_${img_picked}.jpg'
+						'og:image': '${img_original}'
+		                // 'og:image': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output/${img_id}_${img_picked}.jpg'
 		            }
 		        })
 		    },
