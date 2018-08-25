@@ -29,8 +29,6 @@ function imageProcess(imageUrl, userID, select) {
             }
         };
 
-		// console.log("bbbbb");
-
         request.post(options, (error, response, body) => {
 
             if (error) {
@@ -139,6 +137,7 @@ function pickProcess(jsonResponse, select) {
 
 // test code.
 // var imageUrl = 'http://dn-m.talk.kakao.com/talkm/bl2TiOCu5js/xh4Oqs5ClcWqjHfLMfJdl1/i_soqvnbua000h1.jpg';
+// var imageUrl = 'http://image.xportsnews.com/contents/images/upload/article/2017/0909/1504915366388943.jpg';
 // var userId = 0;
 // var select = 'neutral';
 // imageProcess(imageUrl, userId, select);
