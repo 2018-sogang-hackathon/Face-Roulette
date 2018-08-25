@@ -23,3 +23,11 @@ $ node server.js
 	1. Azure Face API
 	2. Kakao Plus friend API
 	3. Node.js
+
+
+## 3. MongoDB 초기 설정
+`use <DB_NAME>`: DB 생성 및 현재 선택된 DB로 지정  
+`db.createCollection(<COLLECTION_NAME>)`: 컬렉션 생성  
+`db.<COLLECTION_NAME>.find()`: 컬렉션에 저장된 모든 도큐먼트를 불러옴  
+  
+DB이름과 컬렉션 이름은 `db-utils.js`에 저장된 상수값 참고
