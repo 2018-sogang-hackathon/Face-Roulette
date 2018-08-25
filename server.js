@@ -65,8 +65,7 @@ function sendImage(bias, req, res, select) {
                     },
                     "message_button": {
                         "label": "공유하기",
-                        "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
-
+                        "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share?img_id=" + img_id + '&img_picked=' + ret.pick_number.toString()
                     }
                 }
             };
@@ -77,16 +76,16 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/share/:img_id/:img_picked', function(req, res) {
-//	console.log(img_id, img_picked);
-	console.log(req.params.img_id, req.params.img_picked);
-	res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
-});
-
-app.get('/view/:img_id/:img_picked', function(req, res) {
-	console.log("view inside");
-	res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
-});
+// app.get('/share/:img_id/:img_picked', function(req, res) {
+// //	console.log(img_id, img_picked);
+// 	console.log(req.params.img_id, req.params.img_picked);
+// 	res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
+// });
+//
+// app.get('/view/:img_id/:img_picked', function(req, res) {
+// 	console.log("view inside");
+// 	res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
+// });
 
 app.get('/keyboard', function(req, res) {
     var keySetting = {
