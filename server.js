@@ -45,30 +45,32 @@ function sendImage(bias, req, res, select) {
     var prom = img_proc.imageProcess(img_url[req.body.user_key], img_id, select);
 
     prom.then(function(ret) {
-            var resSetting;
-            if (ret == 0) { // 이미지에 얼굴이 하나도 없을 때
-                resSetting = {
-                    "message": {
-                        "text": "이미지에 얼굴이 없습니다. 다시 시도하세요!"
-                    }
-                };
-            } else { // 정상적인 경우
-                resSetting = {
-                    "message": {
-                        "text": "오늘밤 주인공은 너야 너!!",
-                        "photo": {
-                            "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
-                            "width": ret.width,
-                            "height": ret.height
 
-                        },
-                        "message_button": {
-                            "label": "공유하기",
-                            "url": "ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
-                        }
+        var resSetting;
+        if (ret == 0) { // 이미지에 얼굴이 하나도 없을 때
+            resSetting = {
+                "message": {
+                    "text": "이미지에 얼굴이 없습니다. 다시 시도하세요!"
+                }
+            };
+        } else { // 정상적인 경우
+            resSetting = {
+                "message": {
+                    "text": "오늘밤 주인공은 너야 너!!",
+                    "photo": {
+                        "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
+                        "width": ret.width,
+                        "height": ret.height
+
+                    },
+                    "message_button": {
+                        "label": "공유하기",
+                        "url": "ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
+
                     }
-                };
-			}
+                }
+            };
+        }
         console.log('num of people:' + ret.num_of_people);
         console.log('pick num:' + ret.pick_number);
         res.send(JSON.stringify(resSetting));
