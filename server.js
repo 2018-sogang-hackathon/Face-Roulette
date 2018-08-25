@@ -25,6 +25,7 @@ function sendImage(bias, req, res, select)
         else{ // 정상적인 경우
             resSetting = {
                 "message": {
+                    "text": "오늘밤 주인공은 너야 너!!",
                     "photo": {
                     "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
                         "width":ret.width,
@@ -58,15 +59,15 @@ app.post('/message', function(req, res){
                 "type": "buttons",
                 "buttons": [
                     "랜덤으로!",
-                    "가장 행복해보이는 사람!",
-                    "가장 슬퍼보이는 사람!",
-                    "가장 무표정인 사람!",
-                    "가장 나이들어 보이는 사람!",
-                    "가장 화나 보이는 사람!",
-                    "경멸하는 표정을 짓는 사람!",
-                    "역겨운 표정을 짓는 사람!",
-                    "공포를 느끼고 있는 사람!",
-                    "가장 놀라보이는 사람!"
+                    "가장 나이들어 보이는 사람",
+                    "가장 행복해보이는 사람",
+                    "가장 슬퍼보이는 사람",
+                    "가장 화나 보이는 사람",
+                    "가장 무표정인 사람",
+                    "경멸하는 표정을 짓는 사람",
+                    "역겨운 표정을 짓는 사람",
+                    "공포를 느끼고 있는 사람",
+                    "가장 놀라보이는 사람"
                 ]
             }
         };
@@ -78,31 +79,31 @@ app.post('/message', function(req, res){
         if(req.body.content == "랜덤으로!"){
             sendImage(bias, req, res, 'random');
         }
-        else if(req.body.content == "가장 나이들어 보이는 사람!"){
+        else if(req.body.content == "가장 나이들어 보이는 사람"){
             sendImage(bias, req, res, 'age');
         }
-        else if(req.body.content == "가장 행복해보이는 사람!"){
+        else if(req.body.content == "가장 행복해보이는 사람"){
             sendImage(bias, req, res, 'happiness');
         }
-        else if(req.body.content == "가장 슬퍼보이는 사람!"){
+        else if(req.body.content == "가장 슬퍼보이는 사람"){
             sendImage(bias, req, res, 'sadness');
         }
-        else if(req.body.content == "가장 화나 보이는 사람!"){
+        else if(req.body.content == "가장 화나 보이는 사람"){
             sendImage(bias, req, res, 'anger');
         }
-        else if(req.body.content == "가장 무표정인 사람!"){
+        else if(req.body.content == "가장 무표정인 사람"){
             sendImage(bias, req, res, 'neutral');
         }
-        else if(req.body.content == "경멸하는 표정을 짓는 사람!"){
+        else if(req.body.content == "경멸하는 표정을 짓는 사람"){
             sendImage(bias, req, res, 'contempt');
         }
-        else if(req.body.content == "역겨운 표정을 짓는 사람!"){
+        else if(req.body.content == "역겨운 표정을 짓는 사람"){
             sendImage(bias, req, res, 'disgust');
         }
-        else if(req.body.content == "공포를 느끼고 있는 사람!"){
+        else if(req.body.content == "공포를 느끼고 있는 사람"){
             sendImage(bias, req, res, 'fear');
         }
-        else if(req.body.content == "가장 놀라보이는 사람!"){
+        else if(req.body.content == "가장 놀라보이는 사람"){
             sendImage(bias, req, res, 'surprise');
         }
         else
