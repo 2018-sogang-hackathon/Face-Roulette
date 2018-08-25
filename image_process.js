@@ -7,7 +7,9 @@ const subscriptionKey = '7bd0f6be939f422bb7259e7173ae05f1';
 const uriBase = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect';
 const output_path = 'output/';
 
-exports.imageProcess = function imgProcess(imageUrl, userID) {
+exports.imageProcess = imgProcess;
+
+function imgProcess(imageUrl, userID) {
     return new Promise(function(resolve, reject){
         const params = {
             'returnFaceId': 'true', 
@@ -36,6 +38,7 @@ exports.imageProcess = function imgProcess(imageUrl, userID) {
             var count = 0;
 
             if(jsonResponse.length == 0) {
+                console.log('length is zero');
                 resolve(0);
             }
 
@@ -62,6 +65,7 @@ exports.imageProcess = function imgProcess(imageUrl, userID) {
                                 resolve(ret);
                             }
                         });
+                    console.log('img created');
                 })(i, top, left, width, height));
             }
         });
@@ -71,3 +75,5 @@ exports.imageProcess = function imgProcess(imageUrl, userID) {
 var testURL = 'https://img.huffingtonpost.com/asset/5ab1b7562000007d06eb27f0.jpeg?ops=scalefit_630_noupscale';
 var testID = 'qwer';
 imgProcess(testURL, testID);
+//console.log(imgProcess);
+//asdf
