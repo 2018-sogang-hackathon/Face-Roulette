@@ -50,14 +50,18 @@ function imageProcess(imageUrl, userID, select) {
             }).then(obj => {
                 var origin_width = obj.width;
                 var origin_height = obj.height;
-                //console.log(origin_width, origin_height);
+                var cropped_size = [];
+				//console.log(origin_width, origin_height);
                 for (var i = 0; i < jsonResponse.length; i++) {
                     var top = jsonResponse[i].faceRectangle.top;
                     var left = jsonResponse[i].faceRectangle.left;
                     var width = jsonResponse[i].faceRectangle.width;
                     var height = jsonResponse[i].faceRectangle.height;
-
+			
                     ({left, top, width, height} = cropTight(origin_width, origin_height, left, top, width, height));
+					cropped_size[i] = {};
+					cropped_size[i].width = width;
+					cropped_size[i].height = height;
 
                     Jimp.read(imageUrl, ((i, top, left, width, height) => (err, lenna) => {
                         if (err) throw err;
@@ -69,8 +73,8 @@ function imageProcess(imageUrl, userID, select) {
                                     var pick_number = pickProcess(jsonResponse, select);
                                     var ret = {
                                         "pick_number": pick_number,
-                                        "width": jsonResponse[pick_number].faceRectangle.width + 60,
-                                        "height": jsonResponse[pick_number].faceRectangle.height + 60,
+                                        "width": cropped_size[pick_number].width,
+                                        "height": cropped_size[pick_number].height,
                                         "num_of_people": count
                                     };
                                     resolve(ret);

@@ -23,7 +23,6 @@ function sendImage(bias, req, res, select) {
             };
         } else { // 정상적인 경우
             resSetting = {
-				"text": "당첨자는 바로..!",
                 "message": {
                     "text": "오늘밤 주인공은 너야 너!!",
                     "photo": {
@@ -31,10 +30,10 @@ function sendImage(bias, req, res, select) {
                         "width": ret.width,
                         "height": ret.height
                     },
-			"message_button": {
-							  "label": "공유하기",
-							  "url": "https://coupon/url"
-							}
+				"message_button": {
+						"label": "공유하기",
+						"url": "https://coupon/url"
+					}
 
                 },
 			 };
@@ -103,7 +102,7 @@ app.post('/message', function(req, res) {
         } else {
             var resSetting = {
                 "message": {
-                    "text": "문자가 아닌 이미지를 보내주세요!"
+                    "text": "이미지를 보내주세요!"
                 }
             };
             res.send(JSON.stringify(resSetting));
@@ -116,16 +115,10 @@ app.get('*', function(req, res) {
     fs.exists(__dirname + url, function(exists){
         if(exists){
             res.sendFile(__dirname + url);
-            console.log('return image!');
+            console.log('return image:' + __dirname + url);
         }
-        else{
-            var resSetting = {
-                "message": {
-                    "text": "이미지를 보내주세요!"
-                }
-            };
-            res.send(JSON.stringify(resSetting));
-            console.log('invalid request!');
+		else{
+			console.log('invalid request!');
         }
     });
     
