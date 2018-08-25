@@ -62,13 +62,12 @@ function sendImage(bias, req, res, select) {
                         "url": host_url + "/output/" + img_id + '_' + ret.pick_number.toString() + ".jpg",
                         "width": ret.width,
                         "height": ret.height
-
-                    }
+                    },
+					"message_button": {
+	                    "label": "공유하기",
+	                    "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
+	                }
                 },
-                "message_button": {
-                    "label": "공유하기",
-                    "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
-                }
             };
         }
         console.log('num of people:' + ret.num_of_people);
