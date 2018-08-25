@@ -64,7 +64,7 @@ function sendImage(bias, req, res, select) {
                         },
                         "message_button": {
                             "label": "공유하기",
-                            "url": "https://localhost:8080/share/" + img_id + '/' + ret.pick_number.toString()
+                            "url": "ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString()
                         }
                     }
                 };
@@ -76,7 +76,8 @@ function sendImage(bias, req, res, select) {
 }
 
 app.get('/share/:img_id/:img_picked', function(req, res) {
-	console.log("hhhhh");
+	console.log("dddd")
+	console.log(img_id, img_picked);
 	res.render('share', {img_id : img_id, img_picked : img_picked});
 });
 
