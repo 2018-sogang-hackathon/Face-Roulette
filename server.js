@@ -98,7 +98,8 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
         	});
         	FB.ui({
         		method: 'share',
-        		href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked;
+        		//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked;
+				href: "http://naver.com"
         	}, function(response) {
         		console.log('success');
        		});
