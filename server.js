@@ -101,10 +101,10 @@ app.get('/share/:img_id/:img_picked', function(req, res) {
 		        action_type: 'og.shares',
 		        action_properties: JSON.stringify({
 		            object: {
-		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=' + img_id + '&img_picked=' + img_picked,
+		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked},
 		                'og:title': '사진 속 누가 제일 행복해보일까?',
 		                'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
-		                'og:image': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output/' + img_id + '_' + img_picked + '.jpg'
+		                'og:image': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output/${img_id}_${img_picked}.jpg'
 		            }
 		        })
 		    },
