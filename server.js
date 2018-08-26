@@ -120,8 +120,7 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
                                         },
                                         function (response) {
                                             if (response && !response.error_message) {
-                                                // then get post content
-                                                alert('successfully posted. Status id : '+response.post_id);
+                                                window.location.href = "http://facebook.com";
                                             } else {
                                                 alert('Something went error.');
                                             }                                        
