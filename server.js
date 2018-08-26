@@ -112,6 +112,7 @@ app.get('/share/:img_id/:img_picked/:user_key/:select', function(req, res) {
     }else if(select == 'surprise'){
         title = "사진 속 누가 가장 놀랐을까?";
     }
+    var tmp = title;
     title = encodeURIComponent(title);
 
     download(img_original, 'output/'+img_id+'_origin.jpg', function(){
@@ -138,7 +139,7 @@ app.get('/share/:img_id/:img_picked/:user_key/:select', function(req, res) {
                                             action_properties: JSON.stringify({
                                                 object: {
                                                     'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_origin_down}&title=${title}',
-                                                    'og:title': '${title}',
+                                                    'og:title': '${tmp}',
                                                     'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
                                                     'og:image': '${img_origin_down}'
                                                 }
