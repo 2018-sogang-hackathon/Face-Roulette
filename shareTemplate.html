@@ -4,42 +4,22 @@
 <head>
 	<meta charset='utf-8'>
 	<title></title>
-
-	<script>
-		var getParameters = function(paramName) {
-			// 리턴값을 위한 변수 선언
-			var returnValue;
-
-			// 현재 URL 가져오기
-			var url = location.href;
-
-			// get 파라미터 값을 가져올 수 있는 ? 를 기점으로 slice 한 후 split 으로 나눔
-			var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
-
-			// 나누어진 값의 비교를 통해 paramName 으로 요청된 데이터의 값만 return
-			for (var i = 0; i < parameters.length; i++) {
-				var varName = parameters[i].split('=')[0];
-				if (varName.toUpperCase() == paramName.toUpperCase()) {
-					returnValue = parameters[i].split('=')[1];
-					return decodeURIComponent(returnValue);
-				}
-			}
-		};
-
-		var img_id = getParameters(img_id);
-		var img_picked = getParameters(img_picked);
-		var original = getParameters(original);
-		var title = getParameters(title);
-		title = decodeURIComponent(title);
-
-		// orignal : 카톡 서버에 있는 원본 사진 url
-		// https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/output/img_id + '_' + 'img_picked' : 크롭된(picked) 사진 url
-
-	</script>
+	<link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-	hello!
+	<div class="container">
+		<div class="overlay-container">
+			<img id="source_img">
+			<div class="overlay">
+				<div class="cropped-container">
+					<img id="cropped_img" class="spin1">
+				</div>
+				<h2 class="message"><span></span></h2>
+			</div>
+		</div>
+	</div>
+	<script src="client.js"></script>
 </body>
 
 </html>
