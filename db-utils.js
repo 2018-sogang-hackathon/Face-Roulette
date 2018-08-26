@@ -6,7 +6,7 @@ const DB_NAME = 'hackathon';
 const COLLECTION_NAME = 'faceData';
 
 function addFaceData(faceEntries) {
-  MongoClient.connect(`${MONGO_URL}/${DB_NAME}`, function (err, client) {
+	MongoClient.connect(`${MONGO_URL}/${DB_NAME}`, function (err, client) {
     if (err) {
       throw err;
     }

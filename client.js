@@ -21,14 +21,14 @@ var getParameters = function (paramName) {
 };
 
 /////////////////////////////////////
-const REMOTE_DIR = 'https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/output'
+const REMOTE_DIR = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output'
 
 var img_id = getParameters('img_id');
 var img_picked = getParameters('img_picked');
 
 var croppedUrl = `${REMOTE_DIR}/${img_id}_${img_picked}.jpg`;
 var sourceUrl = decodeURIComponent(getParameters('original'));
-var title = decodeURIComponent(getParameters('title'));
+var title = decodeURIComponent(getParameters('title').replace(/\+/g, '%20'));
 
 // croppedUrl = './cropped-example.jpg';
 // sourceUrl = './source-example.jpg';
