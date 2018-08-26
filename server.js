@@ -17,6 +17,14 @@ var img_url = {};
 var bias = Math.round(+new Date() / 1000) % 100000000;
 var USER_STORE = {};
 
+var download = function(uri, filename, callback){
+    request.head(uri, function(err, res, body){
+      console.log('content-type:', res.headers['content-type']);
+      console.log('content-length:', res.headers['content-length']);
+       request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
+
 function sendMsg(response, msg) {
     var resSetting = {
         "message": {
@@ -78,52 +86,55 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
     console.log(req.params.img_id, req.params.img_picked, req.params.user_key);
     var img_id = req.params.img_id;
     var img_picked = req.params.img_picked;
-	var img_original = img_url[req.params.user_key];
-    // Facebook API Code
-    var tmp = `<!DOCTYPE html>
-		<html>
-		<head>
-   			<title> Facebook Login JavaScript Example </title>
-    		<meta charset='utf-8'>
-		</head>
-		<body>
-    	<script>
-        window.fbAsyncInit = function() {
-        	FB.init({
-        		appId: '2136979469960699',
-        		cookie: true,
-        		xfbml: true,
-        		version: 'v3.1'
-        	});
-			FB.ui({
-		        method: 'share_open_graph',
-		        action_type: 'og.shares',
-		        action_properties: JSON.stringify({
-		            object: {
-		                'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_original}',
-		                'og:title': '사진 속 누가 제일 행복해보일까?',
-		                'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
-						'og:image': '${img_original}'
-		            }
-		        })
-		    },
-		    function (response) {
-		        // Action after response
-		    });
-        };
-        (function(d, s, id) {
-        	var js, fjs = d.getElementsByTagName(s)[0];
-        	if (d.getElementById(id)) return;
-        	js = d.createElement(s);
-        	js.id = id;
-        	js.src = 'https://connect.facebook.net/en_US/sdk.js';
-        	fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-		</script>
-	</body>
-</html>`;
-
-    res.send(tmp);
+    var img_original = img_url[req.params.user_key];
+    
+    download(img_original, 'output/'+img_id+'_origin', function(){
+        // Facebook API Code
+        var img_origin_down = host_url + '/output/' + img_id + '_origin';
+        var facebook_api = `<!DOCTYPE html>
+                                <html>
+                                <head>
+                                    <title> Facebook Login JavaScript Example </title>
+                                    <meta charset='utf-8'>
+                                </head>
+                                <body>
+                                    <script>
+                                    window.fbAsyncInit = function() {
+                                        FB.init({
+                                            appId: '2136979469960699',
+                                            cookie: true,
+                                            xfbml: true,
+                                            version: 'v3.1'
+                                        });
+                                        FB.ui({
+                                            method: 'share_open_graph',
+                                            action_type: 'og.shares',
+                                            action_properties: JSON.stringify({
+                                                object: {
+                                                    'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_original}',
+                                                    'og:title': '사진 속 누가 제일 행복해보일까?',
+                                                    'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
+                                                    'og:image': '${img_origin_down}'
+                                                }
+                                            })
+                                        },
+                                        function (response) {
+                                            
+                                        });
+                                    };
+                                    (function(d, s, id) {
+                                        var js, fjs = d.getElementsByTagName(s)[0];
+                                        if (d.getElementById(id)) return;
+                                        js = d.createElement(s);
+                                        js.id = id;
+                                        js.src = 'https://connect.facebook.net/en_US/sdk.js';
+                                        fjs.parentNode.insertBefore(js, fjs);
+                                    }(document, 'script', 'facebook-jssdk'));
+                                    </script>
+                                </body>
+                                </html>`;
+        res.send(facebook_api);
+    });
 });
 
 app.get('/keyboard', function(req, res) {
