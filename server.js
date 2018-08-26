@@ -71,7 +71,8 @@ function sendImage(bias, req, res, select) {
                     },
 					"message_button": {
 	                    "label": "공유하기",
-	                    "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/" + img_id + '/' + ret.pick_number.toString() + '/' + req.body.user_key
+                        "url": "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/share/"
+                        + img_id + '/' + ret.pick_number.toString() + '/' + req.body.user_key + '/' + ret.select
 	                }
                 },
             };
@@ -82,11 +83,35 @@ function sendImage(bias, req, res, select) {
     });
 }
 
-app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
+app.get('/share/:img_id/:img_picked/:user_key/:select', function(req, res) {
     console.log(req.params.img_id, req.params.img_picked, req.params.user_key);
     var img_id = req.params.img_id;
     var img_picked = req.params.img_picked;
     var img_original = img_url[req.params.user_key];
+    var select = req.params.select;
+    var title = "사진 속 얼굴 중 하나를 무작위 선택!";
+
+    if(select == 'random'){
+        title = "사진 속 얼굴 중 하나를 무작위 선택!";
+    }else if(select == 'age'){
+        title = "사진 속 누가 제일 나이들어 보일까?";
+    }else if(select == 'happiness'){
+        title = "사진 속 누가 제일 행복해보일까?";
+    }else if(select == 'sadness'){
+        title = "사진 속 누가 가장 슬퍼보일까?";
+    }else if(select == 'anger'){
+        title = "사진 속 누가 가장 화나보일까?";
+    }else if(select == 'neutral'){
+        title = "사진 속 누가 제일 무표정일까?";
+    }else if(select == 'contempt'){
+        title = "사진 속 누가 제일 경멸하는 표정일까?";
+    }else if(select == 'disgust'){
+        title = "사진 속 누가 제일 역겨운 표정일까?";
+    }else if(select == 'fear'){
+        title = "사진 속 누가 가장 무서워하고 있을까?";
+    }else if(select == 'surprise'){
+        title = "사진 속 누가 가장 놀랐을까?";
+    }
     
     download(img_original, 'output/'+img_id+'_origin.jpg', function(){
         // Facebook API Code
@@ -111,8 +136,8 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
                                             action_type: 'og.shares',
                                             action_properties: JSON.stringify({
                                                 object: {
-                                                    'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_origin_down}',
-                                                    'og:title': '사진 속 누가 제일 행복해보일까?',
+                                                    'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_origin_down}&title=${title}',
+                                                    'og:title': '${title}',
                                                     'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
                                                     'og:image': '${img_origin_down}'
                                                 }

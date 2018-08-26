@@ -53,7 +53,8 @@ function imageProcess(imageUrl, userID, select) {
                                         "pick_number": pick_number,
                                         "width": cropped_size[pick_number].width,
                                         "height": cropped_size[pick_number].height,
-                                        "num_of_people": count
+                                        "num_of_people": count,
+                                        "select": select
                                     };
                                     resolve(ret);
                                 }
