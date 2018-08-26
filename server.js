@@ -112,7 +112,8 @@ app.get('/share/:img_id/:img_picked/:user_key/:select', function(req, res) {
     }else if(select == 'surprise'){
         title = "사진 속 누가 가장 놀랐을까?";
     }
-    
+    title = encodeURIComponent(title);
+
     download(img_original, 'output/'+img_id+'_origin.jpg', function(){
         // Facebook API Code
         var img_origin_down = host_url + '/output/' + img_id + '_origin.jpg';
