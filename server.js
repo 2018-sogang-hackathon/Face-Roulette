@@ -88,9 +88,9 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
     var img_picked = req.params.img_picked;
     var img_original = img_url[req.params.user_key];
     
-    download(img_original, 'output/'+img_id+'_origin', function(){
+    download(img_original, 'output/'+img_id+'_origin.jpg', function(){
         // Facebook API Code
-        var img_origin_down = host_url + '/output/' + img_id + '_origin';
+        var img_origin_down = host_url + '/output/' + img_id + '_origin.jpg';
         var facebook_api = `<!DOCTYPE html>
                                 <html>
                                 <head>
@@ -111,7 +111,7 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
                                             action_type: 'og.shares',
                                             action_properties: JSON.stringify({
                                                 object: {
-                                                    'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_original}',
+                                                    'og:url': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html?img_id=${img_id}&img_picked=${img_picked}&original=${img_origin_down}',
                                                     'og:title': '사진 속 누가 제일 행복해보일까?',
                                                     'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
                                                     'og:image': '${img_origin_down}'
@@ -119,7 +119,12 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
                                             })
                                         },
                                         function (response) {
-                                            
+                                            if (response && !response.error_message) {
+                                                // then get post content
+                                                alert('successfully posted. Status id : '+response.post_id);
+                                            } else {
+                                                alert('Something went error.');
+                                            }                                        
                                         });
                                     };
                                     (function(d, s, id) {
