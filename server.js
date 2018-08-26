@@ -10,8 +10,6 @@ var img_proc2 = require('./image_process2');
 
 var app = express();
 app.use(express.json());
-app.set('views', './view_files');
-app.set('view engine', 'jade');
 app.use(express.static(__dirname));
 
 var host_url = 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080';
@@ -106,27 +104,12 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
 		                'og:title': '사진 속 누가 제일 행복해보일까?',
 		                'og:description': '얼굴인식 기반 제비뽑기 : 페이스룰렛',
 						'og:image': '${img_original}'
-		                // 'og:image': 'http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/output/${img_id}_${img_picked}.jpg'
 		            }
 		        })
 		    },
 		    function (response) {
 		        // Action after response
 		    });
-
-        	// FB.ui({
-        	// 	method: 'share',
-			// 	mobile_iframe: true,
-			// 	href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/shareTemplate.html"
-		    //     title: 'is real',  // The same than name in feed method
-		    //     //picture: 'path_to_your_picture',
-		    //     //caption: 'your_caption',
-		    //     description: '이거 되냐',
-        	// 	//href: "http://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com:8080/view/" + img_id + '/' + img_picked,
-			// 	//href: "http://naver.com"
-        	// }, function(response) {
-        	// 	console.log('success');
-       		// });
         };
         (function(d, s, id) {
         	var js, fjs = d.getElementsByTagName(s)[0];
@@ -141,33 +124,6 @@ app.get('/share/:img_id/:img_picked/:user_key', function(req, res) {
 </html>`;
 
     res.send(tmp);
-    //res.render('share', {img_id : req.params.img_id, img_picked : req.params.img_picked});
-});
-
-app.get('/view/:img_id/:img_picked', function(req, res) {
-    console.log("view inside");
-    var img_id = req.params.img_id;
-    var img_picked = req.params.img_picked;
-    // Template HTML Code
-    var ttemplate = `
-	<!doctype html>
-<html>
-	<head>
-		<meta charset='utf-8'>
-		<meta property="og:url", 	content="https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/share/" + ${img_id} + "/" + ${img_picked}>
-		<meta property="og:type",	content="article">
-		<meta property="og:title",  content="Test test">
-		<meta property="og:description",	content="test test etst tst test">
-		<meta property="og:image",	content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg">
-		<title></title>
-	</head>
-	<body>
-		<img src = 'https://ec2-52-79-228-242.ap-northeast-2.compute.amazonaws.com/output/' + ${img_id} + '_' + ${img_picked} + '.jpg'>
-	</body>
-</html>
-		`;
-    res.send(ttemplate);
-    //res.render('shareTemplate', {img_id : req.params.img_id, img_picked : req.params.img_picked});
 });
 
 app.get('/keyboard', function(req, res) {
