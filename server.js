@@ -325,7 +325,7 @@ app.get('*', function(req, res) {
             res.sendFile(__dirname + url);
             console.log('return image:' + __dirname + url);
         } else {
-            console.log('invalid request!');
+            console.log('invalid request:' + url);
         }
     });
 
